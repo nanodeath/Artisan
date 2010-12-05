@@ -292,7 +292,7 @@ var artisan = (function(window, undefined) {
 				case "CANVAS":
 					// Canvas
 					var context = artisan.findContext(target);
-					this_image = new Image();
+					var this_image = new Image();
 					this_image.src = src;
 					this_image.style.opacity = alpha;
 					this_image.style.MozOpacity = alpha;
