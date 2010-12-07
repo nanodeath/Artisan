@@ -294,17 +294,27 @@ var artisan = (function(window, undefined) {
 					var context = artisan.findContext(target);
 					var this_image = new Image();
 					this_image.src = src;
-					this_image.style.opacity = alpha;
-					this_image.style.MozOpacity = alpha;
-					this_image.onload = function(){
+					function postprocess(){
 						context.shadowOffsetX = shadow_offset_x;
 						context.shadowOffsetY = shadow_offset_y;
 						context.shadowBlur = shadow_blur;
 						context.shadowColor = shadow_color;
 						context.strokeStyle = stroke_color;
 						context.fillStyle = fill_color;
-						context.drawImage(this_image, placex, placey, width, height);
-					};
+						if(context.globalAlpha != alpha){
+							var oldAlpha = context.globalAlpha;
+							context.globalAlpha = alpha;
+							context.drawImage(this_image, placex, placey, width, height);
+							context.globalAlpha = oldAlpha;
+						} else {
+							context.drawImage(this_image, placex, placey, width, height);
+						}
+					}
+					if(this_image.complete){
+					  postprocess();
+					} else {
+					  this_image.onload = postprocess;
+					} 
 					break;
 				default:
 					// Standard Code
